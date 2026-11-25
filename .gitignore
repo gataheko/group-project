@@ -1,0 +1,8 @@
+bin/
+obj/
+.vs/
+*.user
+*.suo
+inventory.db
+inventory.db-shm
+inventory.db-wal

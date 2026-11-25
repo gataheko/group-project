@@ -1,0 +1,23 @@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+<section class="hero">
+    <div><p class="eyebrow">INVENTORY OVERVIEW</p><h1>Good business starts with knowing your stock.</h1><p>Manage products, monitor low stock, and keep track of inventory value.</p></div>
+    <a class="button" asp-controller="Products" asp-action="Create">+ Add product</a>
+</section>
+<div class="stats">
+    <div class="stat"><span>Active products</span><strong>@ViewBag.ProductCount</strong></div>
+    <div class="stat"><span>Low-stock items</span><strong class="warning-text">@ViewBag.LowStockCount</strong></div>
+    <div class="stat"><span>Inventory value</span><strong>@(((decimal)ViewBag.InventoryValue).ToString("C"))</strong></div>
+</div>
+<section class="panel">
+    <div class="section-heading"><h2>Needs attention</h2><a asp-controller="Products" asp-action="Index" asp-route-lowStock="true">View all low-stock items →</a></div>
+    @if (ViewBag.LowStock.Count == 0) { <p class="muted">No low-stock products right now.</p> }
+    else {
+    <div class="table-wrap"><table><thead><tr><th>Product</th><th>Category</th><th>In stock</th><th>Reorder at</th><th></th></tr></thead><tbody>
+    @foreach (Product p in ViewBag.LowStock) {
+        <tr><td><strong>@p.Name</strong><small>@p.Sku</small></td><td>@p.Category?.Name</td><td><span class="pill low">@p.Quantity left</span></td><td>@p.ReorderLevel</td><td><a asp-controller="Products" asp-action="Edit" asp-route-id="@p.Id">Edit</a></td></tr>
+    }
+    </tbody></table></div>
+    }
+</section>
