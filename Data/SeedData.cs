@@ -6,7 +6,11 @@ public static class SeedData
 {
     public static void Initialize(InventoryDbContext db)
     {
-        if (db.Categories.Any()) return;
+        // Only seed an empty database; do not overwrite existing business records.
+        using var transaction = db.Database.BeginTransaction();
+        if (db.Categories.Any() || db.Suppliers.Any() || db.Products.Any() ||
+            db.Customers.Any() || db.PurchaseOrders.Any() || db.PurchaseOrderDetails.Any() ||
+            db.StockMovements.Any() || db.InventoryAdjustments.Any()) return;
 
         var categories = new[]
         {
@@ -31,5 +35,6 @@ public static class SeedData
             new Product { Name = "Paper Towels", Sku = "HOM-001", Description = "Two-roll pack", Price = 3.99m, Quantity = 18, ReorderLevel = 5, CategoryId = categories[2].Id, SupplierId = suppliers[1].Id }
         );
         db.SaveChanges();
+        transaction.Commit();
     }
 }

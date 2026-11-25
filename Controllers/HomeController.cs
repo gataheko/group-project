@@ -6,6 +6,9 @@ namespace SmallBusinessInventory.Controllers;
 
 public class HomeController(InventoryDbContext db) : Controller
 {
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public IActionResult Error() => View();
+
     public async Task<IActionResult> Index()
     {
         // Load active products into memory before calculating decimal totals.

@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<InventoryDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("Inventory")
-        ?? "Data Source=inventory.db"));
+        ?? "Data Source=inventory.db;Foreign Keys=True"));
 builder.Services.AddHttpClient<OpenFoodFactsService>();
 
 var app = builder.Build();
