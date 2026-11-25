@@ -17,9 +17,14 @@
 @foreach(var c in Model) {
 <div class="panel category-card"><div class="category-icon">▦</div><h2>@c.Name</h2><p class="muted">@c.Description</p><div class="category-count">@c.Products.Count(p => !p.IsArchived) active products</div>
 
-@* Added the Edit link and its containing div ~Rduehr *@
 <div class="form-actions">
+        @* Added the Edit link and its containing div ~Rduehr *@
         <a asp-action="Edit" asp-route-id="@c.Id" class="button secondary">Edit</a>
+
+        @* Added a Delete button and popup so I wouldn't have to make a new page because I'm lazy as hell. ~Rduehr *@
+        <form asp-action="Delete" asp-route-id="@c.Id" method="post" onsubmit="return confirm('Delete this category? This cannot be undone.')">
+        <button type="submit" class="button secondary">Delete</button>
+    </form>
     </div></div>
 }
 </div>
