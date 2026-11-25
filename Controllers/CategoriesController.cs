@@ -36,4 +36,49 @@ public class CategoriesController(InventoryDbContext db) : Controller {
         
         return RedirectToAction(nameof(Index));
     }
+
+    // Edit action. Requires a valid ID and entry. ~rduehr
+    public async Task<IActionResult> Edit(int id) {
+        var category = await db.Categories.FindAsync(id);
+
+        // Make sure the entity actually exists. ~rduehr
+        if (category is null)
+            return NotFound();
+    
+        return View(category);
+    }
+
+    [HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description")] Category input) {
+
+        // ID validation to make sure it matches the one submitted by the form. ~rduehr
+        if (id != input.Id)
+            return BadRequest();
+    
+        input.Name = input.Name?.Trim() ?? "";
+    
+        if (!ModelState.IsValid)
+            return View(input);
+    
+        var category = await db.Categories.FindAsync(id);
+    
+        if (category is null)
+            return NotFound();
+
+        // Made sure duplicate checking excludes the current category. ~rduehr
+        if (await db.Categories.AnyAsync(c => c.Name == input.Name && c.Id != id)) {
+            ModelState.AddModelError(nameof(Category.Name), "A category with this name already exists.");
+    
+            return View(input);
+        }
+    
+        category.Name = input.Name;
+        category.Description = input.Description;
+    
+        await db.SaveChangesAsync();
+    
+        TempData["Message"] = "Category updated successfully.";
+
+        return RedirectToAction(nameof(Index));
+    }
 }
