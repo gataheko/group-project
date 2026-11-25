@@ -1,7 +1,39 @@
 @model IEnumerable<Supplier>
 @{ ViewData["Title"] = "Suppliers"; }
-<div class="page-heading"><div><p class="eyebrow">PARTNERS</p><h1>Suppliers</h1><p class="muted">Supplier contact information and catalog relationships.</p></div></div>
-<section class="panel"><div class="table-wrap"><table><thead><tr><th>Supplier</th><th>Contact</th><th>Email</th><th>Phone</th><th>Products</th></tr></thead><tbody>
-@foreach(var s in Model) { <tr><td><strong>@s.Name</strong></td><td>@s.ContactName</td><td>@s.Email</td><td>@s.Phone</td><td>@s.Products.Count(p => !p.IsArchived)</td></tr> }
-</tbody></table></div></section>
-<p class="muted">Supplier records are seeded in the database for this starter version.</p>
+@* I expanded the heading as before because this is too hard too read. ~Rduehr *@
+<div class="page-heading">
+    <div>
+        <p class="eyebrow">PARTNERS</p>
+        <h1>Suppliers</h1>
+        <p class="muted">Manage supplier contact information and catalog relationships.</p>
+    </div>
+
+    @* Links to the GET Create action. ~Rduehr *@
+    <a class="button" asp-action="Create">+ Add Supplier</a>
+</div>
+
+@* Added Actions. Out of my immense kindness, I didn't expand this. ~Rduehr *@
+<section class="panel"><div class="table-wrap"><table><thead><tr><th>Supplier</th><th>Contact</th><th>Email</th><th>Phone</th><th>Products</th><th>Actions</th></tr></thead><tbody>
+
+@* Added dashes when contact information is missing. ~Rduehr *@
+@foreach(var s in Model) { <tr><td><strong>@s.Name</strong></td><td>@(s.ContactName ?? "—")</td><td>@(s.Email ?? "—")</td><td>@(s.Phone ?? "—")</td><td>@s.Products.Count(p => !p.IsArchived)</td>
+
+@* Copied from Category Index *@
+<td class="actions">
+        @* Added the Edit link and its containing div ~Rduehr *@
+        <a asp-action="Edit" asp-route-id="@s.Id">Edit</a>
+
+        @* Added a Delete button and popup so I wouldn't have to make a new page because I'm lazy as hell. ~Rduehr *@
+        <form asp-action="Delete" asp-route-id="@s.Id" method="post" onsubmit="return confirm('Delete this supplier? This cannot be undone.')">
+        <button class="link-button danger-text" type="submit">Delete</button>
+      </form>
+    </td> </tr>
+  }
+  </tbody></table></div>
+
+  @* Checks whether the collection contains any suppliers. ~Rduehr *@
+  @if (!Model.Any()) {
+      <p class="muted">No suppliers found. Add a supplier to get started.</p>
+  }
+
+</section>

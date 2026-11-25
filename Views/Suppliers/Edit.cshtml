@@ -1,0 +1,23 @@
+@* Reused Create.cshtml because I'm lazy. ~rduehr *@
+@model Supplier
+
+@{
+    ViewData["Title"] = "Edit Supplier";
+}
+
+<div class="page-heading">
+    <div>
+        <p class="eyebrow">PARTNERS</p>
+        <h1>Edit supplier</h1>
+        <p class="muted">Update the supplier details below.</p>
+    </div>
+</div>
+
+<section class="panel">
+    @* Tells the browser to submit the form to the Edit POST action. ~Rduehr*@
+    <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+        @*Inserts _CategoryForm I created right before this, which was the entire point. ~Rduehr*@
+        <input type="hidden" asp-for="Id" />
+        <partial name="_SupplierForm" model="Model" />
+    </form>
+</section>
