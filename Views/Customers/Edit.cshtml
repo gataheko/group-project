@@ -1,0 +1,3 @@
+@model Customer
+@{ ViewData["Title"] = "Edit Customer"; }
+<div class="page-heading"><h1>Edit Customer</h1></div><div class="panel"><form asp-action="Edit" asp-route-id="@Model.Id" method="post"><input type="hidden" asp-for="Id"/><partial name="_CustomerForm" model="Model" /></form></div>

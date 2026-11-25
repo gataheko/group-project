@@ -1,0 +1,9 @@
+@model Customer
+<div asp-validation-summary="ModelOnly" class="validation"></div>
+<div class="form-grid">
+<div class="field"><label asp-for="Name"></label><input asp-for="Name" maxlength="120"/><span asp-validation-for="Name"></span></div>
+<div class="field"><label asp-for="Email"></label><input asp-for="Email" type="email" maxlength="160"/><span asp-validation-for="Email"></span></div>
+<div class="field"><label asp-for="Phone"></label><input asp-for="Phone" type="tel" maxlength="30"/><span asp-validation-for="Phone"></span></div>
+<div class="field"><label asp-for="Address"></label><input asp-for="Address" maxlength="250"/><span asp-validation-for="Address"></span></div>
+</div>
+<div class="form-actions"><button type="submit" class="button">Save Customer</button><a asp-action="Index" class="button secondary">Cancel</a></div>
