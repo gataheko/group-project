@@ -1,0 +1,21 @@
+@model Supplier
+
+@{
+    ViewData["Title"] = "Add Supplier";
+}
+
+<div class="page-heading">
+    <div>
+        <p class="eyebrow">PARTNERS</p>
+        <h1>Add a supplier</h1>
+        <p class="muted">Enter the supplier details below.</p>
+    </div>
+</div>
+
+<section class="panel">
+    @* Tells the browser to submit the form to the Create POST action. ~Rduehr*@
+    <form asp-action="Create" method="post">
+        @*Inserts _CategoryForm I created right before this, which was the entire point. ~Rduehr*@
+        <partial name="_SupplierForm" model="Model" />
+    </form>
+</section>
