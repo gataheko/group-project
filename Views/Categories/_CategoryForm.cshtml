@@ -1,0 +1,27 @@
+@* Razor files are cool and can make comments that aren't sent on the HTML side. I'm going to put notes here so I don't forget since I don't normally work with Razor files. ~Rduehr *@
+
+@model Category
+
+@* asp-validation-summary displays validation errors about the model.*@
+<div asp-validation-summary="ModelOnly" class="validation"></div>
+
+@* asp-for binds HTML elements to a model property. This happens again below.*@
+<div class="form-grid">
+    <div class="field">
+      <label asp-for="Name"></label>
+        <input asp-for="Name" maxlength="80" />
+        <span asp-validation-for="Name"></span>
+    </div>
+
+    <div class="field">
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" maxlength="250"></textarea>
+        <span asp-validation-for="Description"></span>
+    </div>
+</div>
+
+@* asp-action="Index" Links back to the category listing *@
+<div class="form-actions">
+    <button type="submit" class="button">Save Category</button>
+    <a asp-action="Index" class="button secondary">Cancel</a>
+</div>

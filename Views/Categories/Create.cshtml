@@ -1,0 +1,21 @@
+@model Category
+
+@{
+    ViewData["Title"] = "Add Category";
+}
+
+<div class="page-heading">
+    <div>
+        <p class="eyebrow">ORGANIZATION</p>
+        <h1>Add a category</h1>
+        <p class="muted">Enter the category details below.</p>
+    </div>
+</div>
+
+<section class="panel">
+    @* Tells the browser to submit the form to the Create POST action. ~Rduehr*@
+    <form asp-action="Create" method="post">
+        @*Inserts _CategoryForm I created right before this, which was the entire point. ~Rduehr*@
+        <partial name="_CategoryForm" model="Model" />
+    </form>
+</section>
