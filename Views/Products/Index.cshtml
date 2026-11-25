@@ -1,0 +1,24 @@
+@model IEnumerable<Product>
+@{ ViewData["Title"] = "Products"; }
+<div class="page-heading"><div><p class="eyebrow">CATALOG</p><h1>Products</h1><p class="muted">Search, review, and update your inventory.</p></div><a class="button" asp-action="Create">+ Add product</a></div>
+<form method="get" class="filters">
+    <input name="search" value="@ViewBag.Search" placeholder="Search name, SKU, or barcode..." />
+    <select name="sort">
+        <option value="name" selected="@(ViewBag.Sort == "name")">Sort: name</option>
+        <option value="sku" selected="@(ViewBag.Sort == "sku")">Sort: SKU</option>
+        <option value="stock" selected="@(ViewBag.Sort == "stock")">Sort: stock</option>
+        <option value="price" selected="@(ViewBag.Sort == "price")">Sort: price</option>
+    </select>
+    <label class="check"><input type="checkbox" name="lowStock" value="true" checked="@ViewBag.LowStock" /> Low stock only</label>
+    <button class="button secondary" type="submit">Apply</button>
+</form>
+<section class="panel">
+@if (!Model.Any()) { <p class="muted">No products found. Try a different search or add a product.</p> }
+else {
+<div class="table-wrap"><table><thead><tr><th>Product</th><th>SKU / Barcode</th><th>Category</th><th>Supplier</th><th>Price</th><th>Stock</th><th>Actions</th></tr></thead><tbody>
+@foreach (var p in Model) {
+<tr><td><strong>@p.Name</strong><small>@p.Description</small></td><td>@p.Sku<small>@p.Barcode</small></td><td>@p.Category?.Name</td><td>@p.Supplier?.Name</td><td>@p.Price.ToString("C")</td><td>@if(p.IsLowStock){<span class="pill low">@p.Quantity</span>}else{<span class="pill">@p.Quantity</span>}</td><td class="actions"><a asp-action="Edit" asp-route-id="@p.Id">Edit</a><form asp-action="Archive" asp-route-id="@p.Id" method="post" onsubmit="return confirm('Archive this product?')"><button class="link-button danger-text" type="submit">Archive</button></form></td></tr>
+}
+</tbody></table></div>
+}
+</section>

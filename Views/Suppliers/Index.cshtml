@@ -1,0 +1,7 @@
+@model IEnumerable<Supplier>
+@{ ViewData["Title"] = "Suppliers"; }
+<div class="page-heading"><div><p class="eyebrow">PARTNERS</p><h1>Suppliers</h1><p class="muted">Supplier contact information and catalog relationships.</p></div></div>
+<section class="panel"><div class="table-wrap"><table><thead><tr><th>Supplier</th><th>Contact</th><th>Email</th><th>Phone</th><th>Products</th></tr></thead><tbody>
+@foreach(var s in Model) { <tr><td><strong>@s.Name</strong></td><td>@s.ContactName</td><td>@s.Email</td><td>@s.Phone</td><td>@s.Products.Count(p => !p.IsArchived)</td></tr> }
+</tbody></table></div></section>
+<p class="muted">Supplier records are seeded in the database for this starter version.</p>

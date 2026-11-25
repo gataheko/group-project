@@ -1,0 +1,14 @@
+@model IEnumerable<Product>
+@{ ViewData["Title"] = "Reports"; }
+<div class="page-heading"><div><p class="eyebrow">BUSINESS INTELLIGENCE</p><h1>Inventory reports</h1><p class="muted">A snapshot of current active inventory.</p></div></div>
+<div class="stats">
+<div class="stat"><span>Total inventory value</span><strong>@(((decimal)ViewBag.TotalValue).ToString("C"))</strong></div>
+<div class="stat"><span>Total units in stock</span><strong>@ViewBag.TotalUnits</strong></div>
+<div class="stat"><span>Low-stock products</span><strong class="warning-text">@ViewBag.LowStockCount</strong></div>
+</div>
+<section class="panel"><h2>Value by category</h2><div class="table-wrap"><table><thead><tr><th>Category</th><th>Units in stock</th><th>Inventory value</th></tr></thead><tbody>
+@foreach(CategoryTotal c in ViewBag.CategoryTotals) { <tr><td>@c.Category</td><td>@c.Units</td><td>@c.Value.ToString("C")</td></tr> }
+</tbody></table></div></section>
+<section class="panel"><h2>Stock report</h2><div class="table-wrap"><table><thead><tr><th>Product</th><th>SKU</th><th>Quantity</th><th>Reorder level</th><th>Unit price</th><th>Total value</th></tr></thead><tbody>
+@foreach(var p in Model) { <tr><td>@p.Name</td><td>@p.Sku</td><td>@p.Quantity</td><td>@p.ReorderLevel</td><td>@p.Price.ToString("C")</td><td>@((p.Price*p.Quantity).ToString("C"))</td></tr> }
+</tbody></table></div></section>

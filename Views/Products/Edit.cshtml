@@ -1,0 +1,4 @@
+@model Product
+@{ ViewData["Title"] = "Edit Product"; }
+<div class="page-heading"><div><p class="eyebrow">CATALOG</p><h1>Edit product</h1><p class="muted">Update product information and stock levels.</p></div></div>
+<section class="panel"><form asp-action="Edit" asp-route-id="@Model.Id" method="post"><input type="hidden" asp-for="Id" /><partial name="_ProductForm" model="Model" /></form></section>

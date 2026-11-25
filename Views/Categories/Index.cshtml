@@ -1,0 +1,9 @@
+@model IEnumerable<Category>
+@{ ViewData["Title"] = "Categories"; }
+<div class="page-heading"><div><p class="eyebrow">ORGANIZATION</p><h1>Categories</h1><p class="muted">Product groups currently in the system.</p></div></div>
+<div class="cards">
+@foreach(var c in Model) {
+<div class="panel category-card"><div class="category-icon">▦</div><h2>@c.Name</h2><p class="muted">@c.Description</p><div class="category-count">@c.Products.Count(p => !p.IsArchived) active products</div></div>
+}
+</div>
+<p class="muted">Categories are seeded in the database for this starter version.</p>

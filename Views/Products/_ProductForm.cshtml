@@ -1,0 +1,14 @@
+@model Product
+<div asp-validation-summary="ModelOnly" class="validation"></div>
+<div class="form-grid">
+    <div class="field"><label asp-for="Name"></label><input asp-for="Name" /><span asp-validation-for="Name"></span></div>
+    <div class="field"><label asp-for="Sku"></label><input asp-for="Sku" /><span asp-validation-for="Sku"></span></div>
+    <div class="field"><label asp-for="Barcode"></label><div class="inline-input"><input asp-for="Barcode" id="Barcode" /><button class="button secondary" type="button" id="lookupButton">Look up</button></div><small id="lookupMessage" class="muted">Optional: fill product details from Open Food Facts.</small><span asp-validation-for="Barcode"></span></div>
+    <div class="field"><label asp-for="Description"></label><input asp-for="Description" /><span asp-validation-for="Description"></span></div>
+    <div class="field"><label asp-for="Price"></label><input asp-for="Price" type="number" step="0.01" min="0.01" /><span asp-validation-for="Price"></span></div>
+    <div class="field"><label asp-for="Quantity"></label><input asp-for="Quantity" type="number" min="0" /><span asp-validation-for="Quantity"></span></div>
+    <div class="field"><label asp-for="ReorderLevel"></label><input asp-for="ReorderLevel" type="number" min="0" /><span asp-validation-for="ReorderLevel"></span></div>
+    <div class="field"><label asp-for="CategoryId"></label><select asp-for="CategoryId" asp-items="ViewBag.CategoryId"><option value="">Select category</option></select><span asp-validation-for="CategoryId"></span></div>
+    <div class="field"><label asp-for="SupplierId"></label><select asp-for="SupplierId" asp-items="ViewBag.SupplierId"><option value="">Select supplier</option></select><span asp-validation-for="SupplierId"></span></div>
+</div>
+<div class="form-actions"><button class="button" type="submit">Save product</button><a class="button secondary" asp-action="Index">Cancel</a></div>

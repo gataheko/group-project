@@ -1,0 +1,80 @@
+-- Small Business Inventory System schema (SQLite). Eight normalized tables.
+PRAGMA foreign_keys = ON;
+
+CREATE TABLE IF NOT EXISTS Categories (
+  Id INTEGER PRIMARY KEY AUTOINCREMENT,
+  Name TEXT NOT NULL UNIQUE,
+  Description TEXT
+);
+CREATE TABLE IF NOT EXISTS Suppliers (
+  Id INTEGER PRIMARY KEY AUTOINCREMENT,
+  Name TEXT NOT NULL UNIQUE,
+  ContactName TEXT,
+  Email TEXT,
+  Phone TEXT
+);
+CREATE TABLE IF NOT EXISTS Products (
+  Id INTEGER PRIMARY KEY AUTOINCREMENT,
+  Name TEXT NOT NULL,
+  Sku TEXT NOT NULL UNIQUE,
+  Barcode TEXT,
+  Description TEXT,
+  Price NUMERIC NOT NULL CHECK (Price > 0),
+  Quantity INTEGER NOT NULL DEFAULT 0 CHECK (Quantity >= 0),
+  ReorderLevel INTEGER NOT NULL DEFAULT 5 CHECK (ReorderLevel >= 0),
+  CategoryId INTEGER NOT NULL,
+  SupplierId INTEGER NOT NULL,
+  IsArchived INTEGER NOT NULL DEFAULT 0,
+  CreatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (CategoryId) REFERENCES Categories(Id) ON DELETE RESTRICT,
+  FOREIGN KEY (SupplierId) REFERENCES Suppliers(Id) ON DELETE RESTRICT
+);
+CREATE TABLE IF NOT EXISTS Customers (
+  Id INTEGER PRIMARY KEY AUTOINCREMENT,
+  Name TEXT NOT NULL,
+  Email TEXT,
+  Phone TEXT,
+  Address TEXT
+);
+CREATE TABLE IF NOT EXISTS PurchaseOrders (
+  Id INTEGER PRIMARY KEY AUTOINCREMENT,
+  OrderNumber TEXT NOT NULL UNIQUE,
+  OrderDate TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  Status TEXT NOT NULL DEFAULT 'Draft',
+  CustomerId INTEGER,
+  FOREIGN KEY (CustomerId) REFERENCES Customers(Id) ON DELETE SET NULL
+);
+CREATE TABLE IF NOT EXISTS PurchaseOrderDetails (
+  Id INTEGER PRIMARY KEY AUTOINCREMENT,
+  PurchaseOrderId INTEGER NOT NULL,
+  ProductId INTEGER NOT NULL,
+  Quantity INTEGER NOT NULL CHECK (Quantity > 0),
+  UnitPrice NUMERIC NOT NULL CHECK (UnitPrice > 0),
+  FOREIGN KEY (PurchaseOrderId) REFERENCES PurchaseOrders(Id) ON DELETE CASCADE,
+  FOREIGN KEY (ProductId) REFERENCES Products(Id) ON DELETE RESTRICT,
+  UNIQUE (PurchaseOrderId, ProductId)
+);
+CREATE TABLE IF NOT EXISTS StockMovements (
+  Id INTEGER PRIMARY KEY AUTOINCREMENT,
+  ProductId INTEGER NOT NULL,
+  MovementDate TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  QuantityChange INTEGER NOT NULL,
+  MovementType TEXT NOT NULL,
+  Notes TEXT,
+  FOREIGN KEY (ProductId) REFERENCES Products(Id) ON DELETE RESTRICT
+);
+CREATE TABLE IF NOT EXISTS InventoryAdjustments (
+  Id INTEGER PRIMARY KEY AUTOINCREMENT,
+  ProductId INTEGER NOT NULL,
+  AdjustmentDate TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PreviousQuantity INTEGER NOT NULL CHECK (PreviousQuantity >= 0),
+  NewQuantity INTEGER NOT NULL CHECK (NewQuantity >= 0),
+  Reason TEXT NOT NULL,
+  FOREIGN KEY (ProductId) REFERENCES Products(Id) ON DELETE RESTRICT
+);
+CREATE INDEX IF NOT EXISTS IX_Products_CategoryId ON Products(CategoryId);
+CREATE INDEX IF NOT EXISTS IX_Products_SupplierId ON Products(SupplierId);
+CREATE INDEX IF NOT EXISTS IX_PurchaseOrders_CustomerId ON PurchaseOrders(CustomerId);
+CREATE INDEX IF NOT EXISTS IX_PurchaseOrderDetails_ProductId ON PurchaseOrderDetails(ProductId);
+CREATE INDEX IF NOT EXISTS IX_StockMovements_ProductId ON StockMovements(ProductId);
+CREATE INDEX IF NOT EXISTS IX_InventoryAdjustments_ProductId ON InventoryAdjustments(ProductId);

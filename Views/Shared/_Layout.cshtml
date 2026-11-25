@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - Small Business Inventory</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+<header class="topbar">
+    <a class="brand" asp-controller="Home" asp-action="Index">📦 Small Business Inventory</a>
+    <nav>
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <a asp-controller="Products" asp-action="Index">Products</a>
+        <a asp-controller="Categories" asp-action="Index">Categories</a>
+        <a asp-controller="Suppliers" asp-action="Index">Suppliers</a>
+        <a asp-controller="Reports" asp-action="Index">Reports</a>
+    </nav>
+</header>
+<main class="container">
+    @if (TempData["Message"] is string message) { <div class="notice">@message</div> }
+    @RenderBody()
+</main>
+<footer>Small Business Inventory System · C# / ASP.NET Core / SQLite</footer>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const button = document.getElementById('lookupButton');
+    if (!button) return;
+    button.addEventListener('click', async () => {
+        const barcode = document.getElementById('Barcode').value.trim();
+        const message = document.getElementById('lookupMessage');
+        if (!barcode) { message.textContent = 'Enter a barcode first.'; return; }
+        message.textContent = 'Searching Open Food Facts...';
+        try {
+            const response = await fetch('@Url.Action("LookupBarcode", "Products")?barcode=' + encodeURIComponent(barcode));
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.message || 'No matching product found.');
+            document.getElementById('Name').value = data.name || '';
+            const extra = [data.brand, data.quantity, data.categories].filter(Boolean).join(' · ');
+            if (extra && !document.getElementById('Description').value)
+                document.getElementById('Description').value = extra;
+            message.textContent = 'Product information loaded. Check it before saving.';
+        } catch (error) {
+            message.textContent = error.message || 'Lookup failed. Check your internet connection.';
+        }
+    });
+});
+</script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

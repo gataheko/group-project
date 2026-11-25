@@ -1,0 +1,4 @@
+@model Product
+@{ ViewData["Title"] = "Add Product"; }
+<div class="page-heading"><div><p class="eyebrow">CATALOG</p><h1>Add a product</h1><p class="muted">Enter the product details below.</p></div></div>
+<section class="panel"><form asp-action="Create" method="post"><partial name="_ProductForm" model="Model" /></form></section>
