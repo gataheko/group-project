@@ -1,0 +1,34 @@
+@model Supplier
+
+<div asp-validation-summary="ModelOnly" class="validation"></div>
+
+<div class="form-grid">
+    <div class="field">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" maxlength="100" />
+        <span asp-validation-for="Name"></span>
+    </div>
+
+    <div class="field">
+        <label asp-for="ContactName">Contact Name</label>
+        <input asp-for="ContactName" maxlength="100" />
+        <span asp-validation-for="ContactName"></span>
+    </div>
+
+    <div class="field">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" type="email" maxlength="150" />
+        <span asp-validation-for="Email"></span>
+    </div>
+
+    <div class="field">
+        <label asp-for="Phone"></label>
+        <input asp-for="Phone" type="tel" maxlength="30" />
+        <span asp-validation-for="Phone"></span>
+    </div>
+</div>
+
+<div class="form-actions">
+    <button type="submit" class="button">Save Supplier</button>
+    <a asp-action="Index" class="button secondary">Cancel</a>
+</div>
