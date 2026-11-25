@@ -20,6 +20,26 @@ public class InventoryDbContext(DbContextOptions<InventoryDbContext> options) : 
         modelBuilder.Entity<Supplier>().HasIndex(x => x.Name).IsUnique();
         modelBuilder.Entity<Product>().HasIndex(x => x.Sku).IsUnique();
         modelBuilder.Entity<PurchaseOrder>().HasIndex(x => x.OrderNumber).IsUnique();
+        modelBuilder.Entity<PurchaseOrderDetail>().HasIndex(x => new { x.PurchaseOrderId, x.ProductId }).IsUnique();
+
+        // Enforce the same rules as Database/01_schema.sql on EF-created databases.
+        modelBuilder.Entity<Product>().ToTable("Products", table =>
+        {
+            table.HasCheckConstraint("CK_Products_Price", "CAST(Price AS NUMERIC) > 0");
+            table.HasCheckConstraint("CK_Products_Quantity", "Quantity >= 0");
+            table.HasCheckConstraint("CK_Products_ReorderLevel", "ReorderLevel >= 0");
+        });
+        modelBuilder.Entity<PurchaseOrderDetail>().ToTable("PurchaseOrderDetails", table =>
+        {
+            table.HasCheckConstraint("CK_PurchaseOrderDetails_Quantity", "Quantity > 0");
+            table.HasCheckConstraint("CK_PurchaseOrderDetails_UnitPrice", "CAST(UnitPrice AS NUMERIC) > 0");
+        });
+        modelBuilder.Entity<InventoryAdjustment>().ToTable("InventoryAdjustments", table =>
+        {
+            table.HasCheckConstraint("CK_InventoryAdjustments_PreviousQuantity", "PreviousQuantity >= 0");
+            table.HasCheckConstraint("CK_InventoryAdjustments_NewQuantity", "NewQuantity >= 0");
+        });
+
         modelBuilder.Entity<Product>().Property(x => x.Price).HasPrecision(10, 2);
         modelBuilder.Entity<PurchaseOrderDetail>().Property(x => x.UnitPrice).HasPrecision(10, 2);
         modelBuilder.Entity<Product>().HasOne(x => x.Category).WithMany(x => x.Products).HasForeignKey(x => x.CategoryId).OnDelete(DeleteBehavior.Restrict);

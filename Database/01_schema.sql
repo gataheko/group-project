@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS Products (
   Sku TEXT NOT NULL UNIQUE,
   Barcode TEXT,
   Description TEXT,
-  Price NUMERIC NOT NULL CHECK (Price > 0),
+  Price NUMERIC NOT NULL CHECK (CAST(Price AS NUMERIC) > 0),
   Quantity INTEGER NOT NULL DEFAULT 0 CHECK (Quantity >= 0),
   ReorderLevel INTEGER NOT NULL DEFAULT 5 CHECK (ReorderLevel >= 0),
   CategoryId INTEGER NOT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS PurchaseOrderDetails (
   PurchaseOrderId INTEGER NOT NULL,
   ProductId INTEGER NOT NULL,
   Quantity INTEGER NOT NULL CHECK (Quantity > 0),
-  UnitPrice NUMERIC NOT NULL CHECK (UnitPrice > 0),
+  UnitPrice NUMERIC NOT NULL CHECK (CAST(UnitPrice AS NUMERIC) > 0),
   FOREIGN KEY (PurchaseOrderId) REFERENCES PurchaseOrders(Id) ON DELETE CASCADE,
   FOREIGN KEY (ProductId) REFERENCES Products(Id) ON DELETE RESTRICT,
   UNIQUE (PurchaseOrderId, ProductId)
