@@ -83,25 +83,9 @@ public class CategoriesController(InventoryDbContext db) : Controller {
         return RedirectToAction(nameof(Index));
     }
 
-    // Delete action. This is a bit more involved. ~rduehr
-    [HttpGet]
+    // Delete action. I originally had this a GET action, but I removed it so I could just have a button popup for deletion instead of creating a new delete page. ~rduehr
+    [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id) {
-        var category = await db.Categories.FindAsync(id);
-        
-        if (category is null)
-            return NotFound();
-    
-        if (await db.Products.AnyAsync(p => p.CategoryId == id)) {
-            TempData["Message"] = "Cannot delete a category that contains products.";
-            return RedirectToAction(nameof(Index));
-        }
-        
-        return View(category);
-    }
-
-    // Named the action Delete so it doesn't actually conflict. ~Rduehr
-    [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int id) {
         var category = await db.Categories.FindAsync(id);
     
         if (category is null)
